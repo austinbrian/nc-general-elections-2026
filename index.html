@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Primaries to Watch in 2026 | The Assembly</title>
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="An interactive guide to the 26 most important North Carolina primary elections in 2026, from The Assembly.">
+  <meta property="og:title" content="26 NC Primary Races to Watch">
+  <meta property="og:description" content="An interactive guide to the 26 most important North Carolina primary elections in 2026.">
+  <meta property="og:type" content="website">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="header-content">
+        <a href="https://www.theassemblync.com/" target="_blank" rel="noopener">
+          <img
+            src="https://i0.wp.com/www.theassemblync.com/wp-content/uploads/2025/03/cropped-TA_Mark_Black_Square.png"
+            alt="The Assembly"
+            class="logo"
+          >
+        </a>
+        <a href="https://www.theassemblync.com/news/politics/elections/north-carolina-2026-top-primary-elections/" class="category-link" target="_blank" rel="noopener">ELECTIONS</a>
+        <h2 class="subtitle" id="pageSubtitle">Top Primaries to Watch in 2026</h2>
+        <p class="byline">
+          By <span class="byline-author">
+            <a href="mailto:bryan@theassemblync.com">Bryan Anderson</a>
+            <span class="author-tooltip">
+              Bryan Anderson is a politics reporter for The Assembly, covering state government and anchoring our twice-weekly politics newsletter, The Caucus. He previously covered elections, voting access, and state government for WRAL-TV, The Associated Press, and The News &amp; Observer.
+            </span>
+          </span>
+        </p>
+        <p class="author-email">
+          <a href="mailto:bryan@theassemblync.com">bryan@theassemblync.com</a>
+        </p>
+        <p class="last-updated">Last updated: <span id="lastUpdated"></span></p>
+        <div class="source-links">
+          Source:
+          <a href="https://www.theassemblync.com/news/politics/elections/north-carolina-2026-top-primary-elections/" target="_blank" rel="noopener">Top 10 Primaries</a>
+          |
+          <a href="https://www.theassemblync.com/news/politics/elections/16-more-north-carolina-primaries-2026/" target="_blank" rel="noopener">16 More Primaries</a>
+        </div>
+        <div class="results-controls">
+          <span class="results-timestamp" id="resultsTimestamp" style="display:none"></span>
+          <button class="refresh-btn" id="refreshResultsBtn" onclick="refreshResults()">Update Results</button>
+        </div>
+      </div>
+    </header>
+
+    <nav class="controls">
+      <div class="view-modes">
+        <span class="control-label">View:</span>
+        <button class="view-btn" data-view="skim">Races</button>
+        <button class="view-btn active" data-view="peek">Matchups</button>
+        <button class="view-btn" data-view="peruse">Peruse</button>
+        <button class="view-btn" data-view="deep-dive">Deep Dive</button>
+      </div>
+
+      <div class="type-filters">
+        <span class="control-label">Filter:</span>
+        <button class="filter-btn active" data-type="ALL">All</button>
+        <button class="filter-btn" data-type="Republican">GOP</button>
+        <button class="filter-btn" data-type="Democratic">Dem</button>
+        <button class="filter-btn" data-type="U.S. House">US House</button>
+        <button class="filter-btn" data-type="U.S. Senate">US Senate</button>
+        <button class="filter-btn" data-type="State Senate">NC Senate</button>
+        <button class="filter-btn" data-type="State House">NC House</button>
+        <button class="filter-btn" data-type="Judicial">Judicial</button>
+      </div>
+    </nav>
+
+    <main class="board" id="board">
+      <!-- Cards populated by JavaScript -->
+    </main>
+
+    <footer class="footer">
+      <p>Data sourced from <a href="https://www.theassemblync.com/" target="_blank" rel="noopener">The Assembly</a></p>
+    </footer>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
