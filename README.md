@@ -8,7 +8,7 @@ election, built for The Assembly. Forked from the spring primaries guide.
 
 ## Live Site
 
-- **GitHub Pages**: _TBD — not deployed yet_
+- **GitHub Pages**: https://austinbrian.github.io/nc-general-elections-2026/
 - **Data source**: `races.json`
 
 ## Quick Start
