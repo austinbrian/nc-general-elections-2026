@@ -11,12 +11,89 @@ const pageSubtitleEl = document.getElementById('pageSubtitle');
 const viewBtns = document.querySelectorAll('.view-btn');
 const filterBtns = document.querySelectorAll('.filter-btn');
 
+// Race ids, chambers, and filters
+//
+// Filters are expressed as sets of chambers so a race spanning two chambers
+// (e.g. the combined SD9/HD4 race) shows under either. 'FEDERAL' is set by the
+// map's Federal toggle and covers both U.S. House and U.S. Senate.
+const FILTER_CHAMBERS = {
+  'U.S. House': ['us-house'],
+  'U.S. Senate': ['us-senate'],
+  'FEDERAL': ['us-house', 'us-senate'],
+  'State Senate': ['nc-senate'],
+  'State House': ['nc-house'],
+  'Judicial': ['judicial'],
+};
+
+const TYPE_CHAMBER = {
+  'U.S. House': 'us-house',
+  'U.S. Senate': 'us-senate',
+  'State Senate': 'nc-senate',
+  'State House': 'nc-house',
+  'Judicial': 'judicial',
+};
+
+const racesById = {};
+
+function slugify(text) {
+  return String(text).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+}
+
+// Use race.id from races.json; derive a stable slug when it's missing
+function assignRaceIds(list) {
+  Object.keys(racesById).forEach(k => delete racesById[k]);
+  list.forEach((race, i) => {
+    let id = race.id ? slugify(race.id) : '';
+    if (!id) {
+      const d = Array.isArray(race.districts) && race.districts[0];
+      id = d && d.chamber
+        ? slugify(d.number != null ? `${d.chamber}-${d.number}` : `${d.chamber}-${race.title}`)
+        : slugify(race.title) || `race-${i + 1}`;
+    }
+    let unique = id;
+    for (let n = 2; racesById[unique]; n++) unique = `${id}-${n}`;
+    race._id = unique;
+    racesById[unique] = race;
+  });
+}
+
+function getRaceDistricts(race) {
+  if (!Array.isArray(race.districts)) return [];
+  return race.districts.filter(d => d && d.chamber);
+}
+
+function getRaceChambers(race) {
+  const chambers = getRaceDistricts(race).map(d => d.chamber);
+  if (chambers.length) return chambers;
+  return TYPE_CHAMBER[race.type] ? [TYPE_CHAMBER[race.type]] : [];
+}
+
+const CHAMBER_NAMES = {
+  'us-house': ['CD', 'Congressional District'],
+  'us-senate': ['Statewide', 'U.S. Senate (statewide)'],
+  'nc-senate': ['SD', 'NC Senate District'],
+  'nc-house': ['HD', 'NC House District'],
+};
+
+function districtShortName(d) {
+  const names = CHAMBER_NAMES[d.chamber];
+  if (!names) return d.chamber;
+  return d.number != null ? `${names[0]} ${d.number}` : names[0];
+}
+
+function districtLongName(d) {
+  const names = CHAMBER_NAMES[d.chamber];
+  if (!names) return d.chamber;
+  return d.number != null ? `${names[1]} ${d.number}` : names[1];
+}
+
 // Load data
 async function loadData() {
   try {
     const response = await fetch('races.json?v=' + Date.now());
     const data = await response.json();
     races = data.races;
+    assignRaceIds(races);
     lastUpdatedEl.textContent = formatDate(data.lastUpdated);
     if (data.subtitle) {
       pageSubtitleEl.textContent = data.subtitle;
@@ -35,6 +112,9 @@ async function loadData() {
     }
 
     renderBoard();
+
+    if (window.NCMap) NCMap.setRaces(races);
+    openRaceFromHash();
   } catch (error) {
     console.error('Error loading race data:', error);
     board.innerHTML = `
@@ -47,43 +127,53 @@ async function loadData() {
 }
 
 // NCSBE contest name mapping
-const NCSBE_URL = 'https://er.ncsbe.gov/enr/20260303/data/results_0.txt';
+const NCSBE_URL = 'https://er.ncsbe.gov/enr/20261103/data/results_0.txt';
 const CORS_PROXIES = [
   url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
   url => `https://corsproxy.io/?${encodeURIComponent(url)}`,
 ];
 
-function buildNcsbeContestName(title, party) {
-  const code = party === 'Republican' ? 'REP' : 'DEM';
+// Mirrors build_ncsbe_contests() in update_results.py — keep the two in sync.
+// Returns [{ contest, key }]: the NCSBE contest name and the results.json key (race
+// title, or a per-district sub-key for multi-district races). Uses race.districts;
+// general contests have no party suffix, primary-style races (race.party set) get " - REP"/" - DEM".
+const NCSBE_PARTY_NAMES = {
+  REP: 'Republican', DEM: 'Democratic', LIB: 'Libertarian', GRE: 'Green',
+  CST: 'Constitution', JFA: 'Justice for All', WTP: 'We the People', UNA: 'Unaffiliated',
+};
 
-  if (title.includes('U.S. Senate')) return [`US SENATE - ${code} (VOTE FOR 1)`];
-
-  const congMatch = title.match(/(\d+)\w* Congressional District/);
-  if (congMatch) {
-    const dist = congMatch[1].padStart(2, '0');
-    return [`US HOUSE OF REPRESENTATIVES DISTRICT ${dist} - ${code} (VOTE FOR 1)`];
+function ncsbeContestBase(d) {
+  const pad = (n, w) => String(n).padStart(w, '0');
+  if (d.chamber === 'us-senate') return 'US SENATE';
+  if (d.chamber === 'us-house' && d.number) return `US HOUSE OF REPRESENTATIVES DISTRICT ${pad(d.number, 2)}`;
+  if (d.chamber === 'nc-senate' && d.number) return `NC STATE SENATE DISTRICT ${pad(d.number, 2)}`;
+  if (d.chamber === 'nc-house' && d.number) return `NC HOUSE OF REPRESENTATIVES DISTRICT ${pad(d.number, 3)}`;
+  if (d.chamber === 'judicial' && d.seat) {
+    const court = d.court || 'coa';
+    if (court === 'coa') return `NC COURT OF APPEALS JUDGE SEAT ${pad(d.seat, 2)}`;
+    if (court === 'supreme') return `NC SUPREME COURT ASSOCIATE JUSTICE SEAT ${pad(d.seat, 2)}`;
   }
-
-  // Combined race like "Senate District 9 / House District 4"
-  if (title.includes('/')) {
-    const names = [];
-    const senMatch = title.match(/Senate District (\d+)/);
-    const houseMatch = title.match(/House District (\d+)/);
-    if (senMatch) names.push(`NC STATE SENATE DISTRICT ${senMatch[1].padStart(2, '0')} - ${code} (VOTE FOR 1)`);
-    if (houseMatch) names.push(`NC HOUSE OF REPRESENTATIVES DISTRICT ${houseMatch[1].padStart(3, '0')} - ${code} (VOTE FOR 1)`);
-    return names;
-  }
-
-  const senMatch = title.match(/Senate District (\d+)/);
-  if (senMatch) return [`NC STATE SENATE DISTRICT ${senMatch[1].padStart(2, '0')} - ${code} (VOTE FOR 1)`];
-
-  const houseMatch = title.match(/House District (\d+)/);
-  if (houseMatch) return [`NC HOUSE OF REPRESENTATIVES DISTRICT ${houseMatch[1].padStart(3, '0')} - ${code} (VOTE FOR 1)`];
-
-  const coaMatch = title.match(/Court of Appeals Judge Seat (\d+)/);
-  if (coaMatch) return [`NC COURT OF APPEALS JUDGE SEAT ${coaMatch[1].padStart(2, '0')} - ${code} (VOTE FOR 1)`];
-
   return null;
+}
+
+function buildNcsbeContestName(race) {
+  const code = { Republican: 'REP', Democratic: 'DEM' }[race.party];
+  const suffix = code ? ` - ${code}` : '';
+  const districts = race.districts || [];
+  const subLabels = { 'nc-senate': 'Senate District', 'nc-house': 'House District', 'us-house': 'Congressional District' };
+
+  const contests = [];
+  for (const d of districts) {
+    const base = ncsbeContestBase(d);
+    if (!base) continue;
+    let key = race.title;
+    if (districts.length > 1) {
+      key = `${subLabels[d.chamber] || d.chamber} ${d.number}`;
+      if (code) key += ` ${race.party} Primary`;
+    }
+    contests.push({ contest: `${base}${suffix} (VOTE FOR 1)`, key });
+  }
+  return contests;
 }
 
 function extractLastName(name) {
@@ -111,7 +201,8 @@ function matchCandidateName(ncsbeName, raceCandidates) {
     const firstAndLast = lastNameMatches.find(c => c.name.split(/\s+/)[0].toUpperCase() === ncsbeFirstName);
     if (firstAndLast) return firstAndLast.name;
   }
-  // Title-case the NCSBE name as fallback
+  // Fallback: keep NCSBE's mixed-case ballot name; title-case only if it's ALL CAPS
+  if (ncsbeName !== ncsbeName.toUpperCase()) return ncsbeName.trim();
   return ncsbeName.split(/\s+/).map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase()).join(' ');
 }
 
@@ -134,32 +225,22 @@ function parseNcsbeResults(ncsbeData) {
   };
 
   for (const race of races) {
-    const contestNames = buildNcsbeContestName(race.title, race.party);
-    if (!contestNames) continue;
-
-    for (const contestName of contestNames) {
-      const rows = byContest[contestName];
+    for (const { contest, key: raceKey } of buildNcsbeContestName(race)) {
+      const rows = byContest[contest];
       if (!rows) continue;
 
       rows.sort((a, b) => parseInt(b.vct) - parseInt(a.vct));
 
-      const candidates = rows.map(row => ({
-        name: matchCandidateName(row.bnm, race.candidates),
-        votes: parseInt(row.vct),
-        percentage: parseFloat(row.pct),
-      }));
-
-      // For combined races, use sub-race key
-      let raceKey = race.title;
-      if (contestNames.length > 1) {
-        if (contestName.includes('STATE SENATE')) {
-          const m = contestName.match(/DISTRICT (\d+)/);
-          raceKey = `Senate District ${parseInt(m[1])} Republican Primary`;
-        } else if (contestName.includes('HOUSE OF REPRESENTATIVES')) {
-          const m = contestName.match(/DISTRICT (\d+)/);
-          raceKey = `House District ${parseInt(m[1])} Republican Primary`;
-        }
-      }
+      const candidates = rows.map(row => {
+        const cand = {
+          name: matchCandidateName(row.bnm, race.candidates),
+          votes: parseInt(row.vct),
+          percentage: parseFloat(row.pct),
+        };
+        const pty = (row.pty || '').trim();
+        if (pty) cand.party = NCSBE_PARTY_NAMES[pty] || pty;
+        return cand;
+      });
 
       output.races[raceKey] = {
         precinctsReporting: `${rows[0].prt} of ${rows[0].ptl}`,
@@ -224,7 +305,7 @@ async function refreshResults() {
 // Update the results timestamp display
 function updateResultsTimestamp() {
   const el = document.getElementById('resultsTimestamp');
-  if (el && resultsData) {
+  if (el && resultsData && resultsData.lastUpdated) {
     const d = new Date(resultsData.lastUpdated);
     el.textContent = `Results: ${d.toLocaleTimeString()} | ${resultsData.precinctsReporting} precincts`;
     el.style.display = 'inline';
@@ -244,7 +325,9 @@ function formatDate(dateStr) {
 // Check if race matches filter
 function matchesFilter(race, filter) {
   if (filter === 'ALL') return true;
-  return race.party === filter || race.type === filter;
+  const chambers = FILTER_CHAMBERS[filter];
+  if (!chambers) return race.party === filter || race.type === filter;
+  return getRaceChambers(race).some(c => chambers.includes(c));
 }
 
 // Get role class for styling
@@ -264,33 +347,39 @@ function getResultsHTML(race) {
   // Look up results by race title
   let raceResults = resultsData.races[race.title];
 
-  // For combined races, check sub-race keys
-  if (!raceResults && race.title.includes('/')) {
-    const parts = race.title.split('/').map(p => p.trim());
+  // For multi-district races, look up each sub-race by exact key:
+  // "House District 4" (general) or "House District 4 Republican Primary" (primary)
+  const subKeys = getResultsSubKeys(race);
+  if (!raceResults && subKeys.length > 0) {
     const subResults = [];
-    for (const part of parts) {
-      // Try matching partial title
-      for (const key of Object.keys(resultsData.races)) {
-        if (key.includes(part.replace(/ Republican Primaries?| Democratic Primaries?/i, '').trim())) {
-          subResults.push({ key, data: resultsData.races[key] });
-        }
-      }
+    for (const base of subKeys) {
+      const candidates = race.party ? [base, `${base} ${race.party} Primary`] : [base];
+      const key = candidates.find(k => resultsData.races[k]);
+      if (key) subResults.push({ key, data: resultsData.races[key] });
     }
-    if (subResults.length > 0) {
-      return subResults.map(({ key, data }) => renderResultsBlock(key, data, race)).join('');
-    }
-    return '';
+    return subResults.map(({ key, data }) => renderResultsBlock(key, data, race)).join('');
   }
 
   if (!raceResults) return '';
   return renderResultsBlock(null, raceResults, race);
 }
 
+// Base results.json keys for a multi-district race (see buildNcsbeContestName)
+function getResultsSubKeys(race) {
+  const labels = { 'nc-senate': 'Senate District', 'nc-house': 'House District', 'us-house': 'Congressional District' };
+  const districts = getRaceDistricts(race).filter(d => labels[d.chamber] && d.number != null);
+  if (districts.length > 1) return districts.map(d => `${labels[d.chamber]} ${d.number}`);
+  if (race.title.includes('/')) {
+    return race.title.split('/').map(p => p.trim().replace(/ (Republican|Democratic) Primar(y|ies)$/i, '').trim());
+  }
+  return [];
+}
+
 function renderResultsBlock(subLabel, raceResults, race) {
   const totalVotes = raceResults.candidates.reduce((sum, c) => sum + c.votes, 0);
-  const partyClass = race.party.toLowerCase();
-
   const barsHTML = raceResults.candidates.map(c => {
+    // Colour by the candidate's party (general), falling back to the race's (primary)
+    const partyClass = slugify(c.party || race.party || 'other');
     const pctDisplay = (c.percentage * 100).toFixed(1);
     const votesDisplay = c.votes.toLocaleString();
     const isLeading = c === raceResults.candidates[0] && raceResults.candidates.length > 1;
@@ -330,7 +419,12 @@ function getExpandedView() {
 // Create race card HTML
 function createRaceCard(race) {
   const isHidden = !matchesFilter(race, currentFilter);
-  const partyClass = race.party.toLowerCase();
+  const partyClass = (race.party || '').toLowerCase();
+  const partyHTML = race.party ? `<span class="card-party ${partyClass}">${race.party}</span>` : '';
+  const chipsHTML = getRaceDistricts(race)
+    .filter(d => d.chamber !== 'judicial')
+    .map(d => `<button type="button" class="district-chip" data-chamber="${d.chamber}" data-number="${d.number ?? ''}" aria-label="Show ${districtLongName(d)} on the map">${districtShortName(d)}</button>`)
+    .join('');
 
   const candidatesHTML = race.candidates
     .map(c => `
@@ -356,8 +450,10 @@ function createRaceCard(race) {
   const resultsHTML = getResultsHTML(race);
 
   return `
-    <article class="race-card party-${partyClass} ${isHidden ? 'hidden' : ''}"
-             data-party="${race.party}"
+    <article class="race-card ${partyClass ? `party-${partyClass}` : ''} ${isHidden ? 'hidden' : ''}"
+             id="race-${race._id}"
+             data-id="${race._id}"
+             data-party="${race.party || ''}"
              data-type="${race.type}"
              data-rank="${race.rank}">
       <div class="card-header">
@@ -365,8 +461,9 @@ function createRaceCard(race) {
         <div class="card-info">
           <h3 class="card-title">${race.title}</h3>
           <div class="card-meta">
-            <span class="card-party ${partyClass}">${race.party}</span>
+            ${partyHTML}
             <span class="card-type">${race.type}</span>
+            ${chipsHTML}
           </div>
           <div class="card-location">${race.location}</div>
         </div>
@@ -432,19 +529,107 @@ function setView(view) {
 }
 
 // Handle filter change
+// currentFilter is the single source of truth for both the filter buttons and
+// the map layer: the map toggle calls setFilter, and setFilter tells the map.
 function setFilter(filter) {
   currentFilter = filter;
+  const active = FILTER_CHAMBERS[filter] || [];
   filterBtns.forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.type === filter);
+    const btnChambers = FILTER_CHAMBERS[btn.dataset.type] || [];
+    const isActive = btn.dataset.type === filter ||
+      (filter === 'FEDERAL' && btnChambers.length > 0 && btnChambers.every(c => active.includes(c)));
+    btn.classList.toggle('active', isActive);
   });
 
+  // Board may be showing an empty state from a previous render
+  if (!board.querySelector('.race-card') && races.length) {
+    renderBoard();
+  }
+
+  let visibleCount = 0;
   document.querySelectorAll('.race-card').forEach(card => {
-    const cardParty = card.dataset.party;
-    const cardType = card.dataset.type;
-    const isVisible = matchesFilter({ party: cardParty, type: cardType }, filter);
+    const race = racesById[card.dataset.id] || { party: card.dataset.party, type: card.dataset.type };
+    const isVisible = matchesFilter(race, filter);
+    if (isVisible) visibleCount++;
     card.classList.toggle('hidden', !isVisible);
   });
+
+  let emptyEl = board.querySelector('.filter-empty');
+  if (visibleCount === 0 && board.querySelector('.race-card')) {
+    if (!emptyEl) {
+      board.insertAdjacentHTML('beforeend', `
+        <div class="empty-state filter-empty">
+          <h3>No Races Found</h3>
+          <p>No featured races match the selected filter.</p>
+        </div>
+      `);
+    }
+  } else if (emptyEl) {
+    emptyEl.remove();
+  }
+
+  if (window.NCMap) NCMap.syncToFilter(filter);
 }
+
+// Height of the sticky controls bar, so scrolled-to cards aren't hidden under it
+function getStickyOffset() {
+  const controls = document.querySelector('.controls');
+  return controls ? controls.getBoundingClientRect().height + 12 : 12;
+}
+
+function scrollToCard(card) {
+  const top = card.getBoundingClientRect().top + window.scrollY - getStickyOffset();
+  window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+}
+
+// Expand a race card, scroll to it, and flash it (used by the map and #race= hash)
+function openRaceCard(id) {
+  const race = racesById[id];
+  if (!race) return false;
+
+  // Make sure the card is visible under the current filter
+  if (!matchesFilter(race, currentFilter)) {
+    setFilter('ALL');
+  }
+
+  const card = document.getElementById(`race-${id}`);
+  if (!card) return false;
+
+  const previouslyExpanded = board.querySelector('.race-card.expanded');
+  if (previouslyExpanded && previouslyExpanded !== card) {
+    previouslyExpanded.classList.remove('expanded', 'expanded-peruse', 'expanded-deep-dive');
+  }
+  if (!card.classList.contains('expanded')) {
+    card.classList.add('expanded', getExpandedView());
+  }
+
+  setTimeout(() => {
+    scrollToCard(card);
+    card.classList.remove('flash');
+    void card.offsetWidth; // restart the animation
+    card.classList.add('flash');
+  }, 50);
+  return true;
+}
+
+function setRaceHash(id) {
+  try {
+    history.replaceState(null, '', `#race=${encodeURIComponent(id)}`);
+  } catch (e) {
+    // replaceState can throw in sandboxed iframes; the hash is a convenience
+  }
+}
+
+function openRaceFromHash() {
+  const match = window.location.hash.match(/^#race=([^&]+)/);
+  if (!match) return;
+  const id = decodeURIComponent(match[1]);
+  if (!racesById[id]) return;
+  if (window.NCMap) NCMap.showRace(id, { scroll: false });
+  openRaceCard(id);
+}
+
+window.addEventListener('hashchange', openRaceFromHash);
 
 // Event Listeners
 viewBtns.forEach(btn => {
@@ -457,6 +642,17 @@ filterBtns.forEach(btn => {
 
 // Card click handler using event delegation
 board.addEventListener('click', function(e) {
+  // District chip: show the district on the map instead of toggling the card
+  const chip = e.target.closest('.district-chip');
+  if (chip) {
+    e.stopPropagation();
+    if (window.NCMap) {
+      const num = chip.dataset.number === '' ? null : parseInt(chip.dataset.number, 10);
+      NCMap.showDistrict(chip.dataset.chamber, num, { scroll: true });
+    }
+    return;
+  }
+
   // Handle "Dive Deeper" button click
   if (e.target.classList.contains('dive-deep-btn')) {
     e.stopPropagation();
@@ -490,9 +686,13 @@ board.addEventListener('click', function(e) {
 
   // Scroll into view
   setTimeout(() => {
-    card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    scrollToCard(card);
   }, 50);
 });
 
-// Initialize
-loadData();
+board.addEventListener('animationend', e => {
+  if (e.target.classList.contains('race-card')) e.target.classList.remove('flash');
+});
+
+// Initialize (wait for the login gate in auth.js)
+(window.authReady || Promise.resolve()).then(loadData);

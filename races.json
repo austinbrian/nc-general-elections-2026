@@ -4,10 +4,17 @@
   "subtitle": "General Elections to Watch in 2026 (PLACEHOLDER DATA)",
   "races": [
     {
+      "id": "nc-senate-26",
       "rank": 1,
       "title": "Senate District 26 Republican Primary",
       "party": "Republican",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 26
+        }
+      ],
       "location": "Rockingham & Guilford Counties",
       "candidates": [
         {
@@ -32,10 +39,17 @@
       "fullText": "The state Senate showdown between GOP leader Phil Berger and Rockingham County Sheriff Sam Page is undoubtedly the most important North Carolina primary to watch.\n\nBerger joined the chamber in 2001 and took over a decade later thanks in large part to a GOP wave fueled by public frustration over the slow recovery from the Great Recession under Democratic leadership.\n\nWith Berger at the helm, the legislature has targeted illegal immigration, lowered corporate and personal income tax rates, expanded Medicaid, and entrenched the GOP's political grip in the state by drawing highly favorable voting maps, reconfiguring the makeup of various agencies, and making statewide judicial contests partisan.\n\nBut Berger drew the ire of constituents and fellow Republican leaders in 2023 after pushing for a casino in Rockingham County. He ultimately lost a showdown with then-House Speaker Tim Moore, whose chamber opposed including non-tribal casinos and video lottery terminals in the state budget.\n\nAs Page spotted cracks in Berger's armor, he weighed whether to run against him in 2024. The Rockingham County sheriff met privately with Berger in December 2023 before sticking with his original plan to run for lieutenant governor.\n\nPage finished fifth in the 11-candidate primary, but he won more votes in his home county than all of his opponents combined. In the same election, Berger's son Kevin survived a primary challenge to hang onto his county commission seat by a mere three votes, or 0.01 percentage points.\n\nPage announced last year that he would take on the senior Berger. His bid comes in spite of an arm-twisting effort by his party to convince him not to run. A top state senator left a note at Page's doorstep pleading for him to drop out, WRAL reported, and President Donald Trump urged Page to drop out of the race and offered him a role in his administration.\n\nA primary victory for Berger would reaffirm his influence, while a defeat could signal growing frustration with the status quo in Raleigh.\n\nWhat little reliable polling we've seen in this race suggests it could be close.\n\nBut for all the attention Rockingham County has received, the outcome will likely be decided in Guilford County, which constitutes 57% of the district. This could benefit Berger, who is both better known and has more resources to reach voters in the Greensboro media market.\n\nPage entered 2026 with over $29,000 in his campaign coffers, which pales in comparison to the nearly $1.6 million Berger had in cash on hand, according to the candidates' latest finance reports."
     },
     {
+      "id": "nc-house-106",
       "rank": 2,
       "title": "House District 106 Democratic Primary",
       "party": "Democratic",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 106
+        }
+      ],
       "location": "Mecklenburg County",
       "candidates": [
         {
@@ -65,10 +79,17 @@
       "fullText": "This may be the toughest Democratic primary to get a read on.\n\nRep. Carla Cunningham of Mecklenburg County was the most conservative-voting Democrat in Raleigh last year, so it's not surprising that many in her party want her out. She received fierce pushback over comments she made about immigration last year, and because she voted with Republicans to override the governor's vetoes, the state party is withholding a critical voter-turnout tool.\n\nChallenger Rev. Rodney Sadler is running with Stein's support, and while he's less known, he stands to benefit from the party's frustration.\n\nVermanno Bowman, a Democrat who lost to Cunningham in the 2024 primary by 69 percentage points, is also running. It's difficult to see a path for him, but his candidacy helps the incumbent if he and Sadler split the more progressive vote.\n\nWhoever wins the primary should cruise to an easy victory in the general election. But this race could say a lot about the mood of the party—and if Republicans again fail to win a supermajority in the House, it could mean the difference on overriding the governor's veto."
     },
     {
+      "id": "us-house-1",
       "rank": 3,
       "title": "1st Congressional District Republican Primary",
       "party": "Republican",
       "type": "U.S. House",
+      "districts": [
+        {
+          "chamber": "us-house",
+          "number": 1
+        }
+      ],
       "location": "Northeastern NC (25 counties)",
       "candidates": [
         {
@@ -108,10 +129,17 @@
       "fullText": "The outcome of this five-person race will decide who gets a chance to run in what's poised to be the most competitive congressional race this fall, so it's fitting that the candidates are already butting heads.\n\nA Black Democrat has represented the expansive northeastern district since 1992, and no Republican has held the seat since 1883.\n\nThat could change this year under the new voting map Republican lawmakers passed last fall that moved U.S. Rep. Don Davis' seat from a tossup to leaning Republican, according to the nonpartisan Cook Political Report.\n\nArmy veteran Laurie Buckhout is seen as the favorite to win the GOP primary, given her name recognition from a narrow loss to Davis in 2024 and a sizable financial advantage over her primary competitors.\n\nState Sen. Bobby Hanig of Currituck County, businessman Eric Rouse, Carteret County Sheriff Asa Buck, and divorce attorney Ashley-Nicole Russell are also vying for the nomination.\n\nBuckhout wasn't planning to run, but changed her mind and got into the race after Rocky Mount Mayor Sandy Roberson dropped out. Buckhout had previously voiced health concerns over burn pit exposure she experienced in Iraq, but she says her health improved after she took a cyber defense job in the Trump administration in March 2025.\n\nHanig is arguably the next-most prominent candidate after he publicly lobbied his state House counterparts to tank a bill banning shrimp trawling.\n\nRouse presents himself as the most Trump-aligned candidate in the race, noting Hanig initially endorsed Florida Gov. Ron DeSantis in 2024.\n\nBuck was first elected sheriff in 2006 and is well known in his own community, but the district includes parts of 25 counties. And between her more limited campaign resources and lack of elected experience, Russell has the biggest uphill battle.\n\nLatest campaign finance reports show Buckhout entered 2026 with nearly twice as much money as her four opponents combined. Nearly all of it came from a personal loan she made to her campaign."
     },
     {
+      "id": "us-house-4",
       "rank": 4,
       "title": "4th Congressional District Democratic Primary",
       "party": "Democratic",
       "type": "U.S. House",
+      "districts": [
+        {
+          "chamber": "us-house",
+          "number": 4
+        }
+      ],
       "location": "Durham, Orange, Wake, Chatham Counties",
       "candidates": [
         {
@@ -141,10 +169,17 @@
       "fullText": "This Durham-area U.S. House primary will be a heavyweight bout between incumbent Rep. Valerie Foushee and progressive challenger Nida Allam. The outcome will show the direction one of the state's most liberal districts is heading. (Democrat Mary Patterson is also running, but isn't seen as a serious threat.)\n\nIn 2022, Allam lost to Foushee by 9 percentage points. But that was in an eight-person field, and the district has been altered dramatically since then, likely to Allam's advantage.\n\nThe 4th District included all or parts of six counties in 2022; Allam carried Durham, while Foushee handily won the rest. This year, four of the five counties Foushee won have been drawn out: Alamance, Caswell, Granville, and Person. Orange County remains, but it has less than half as many voters as Durham. The district also gained one-fifth of Wake and most of Chatham.\n\nAllam is off to a strong start since announcing her campaign in December. The Durham County commissioner raised more than $334,000 in roughly three weeks, while Foushee took in less than $140,000 over the quarter.\n\nVermont Sen. Bernie Sanders and Allam are scheduled to host an event on Friday as part of the senator's \"Fighting Oligarchy\" tour, and Sanders has called Allam \"a great progressive candidate for Congress.\"\n\nFoushee has support from the state Democratic Party's congressional delegation, Gov. Josh Stein and former Gov. Roy Cooper, and top state legislative Democrats.\n\nImmigration and U.S. support for Israel are likely to be the most pressing issues in the race. Last year, Allam posted a video of federal agents taking three individuals into custody outside a shopping center. She accused the agents of \"kidnapping people\" and directed her supporters to call an advocacy group if they spot officers. Foushee has called for federal immigration enforcement agents to be unmasked and for Homeland Security Secretary Kristi Noem to resign.\n\nThe two candidates have also tangled over the role the U.S. should have in the war in Gaza.\n\nAllam, the first Muslim woman to hold elected office in North Carolina, apologized in 2022 for a tweet that she said was unintentionally anti-Semitic. She has criticized Foushee for accepting more than $2 million during the 2022 election from United Democracy Project, the political arm of the American Israel Public Affairs Committee, and for traveling to Israel with a delegation the group organized. Foushee said at a town hall last year that she wouldn't accept money from the group in the 2026 election.\n\nFoushee said last month that she opposes additional spending on conflicts in the Middle East and South America beyond humanitarian relief."
     },
     {
+      "id": "nc-house-27",
       "rank": 5,
       "title": "House District 27 Democratic Primary",
       "party": "Democratic",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 27
+        }
+      ],
       "location": "Northampton County",
       "candidates": [
         {
@@ -169,10 +204,17 @@
       "fullText": "In 2024, political newcomer Rodney Pierce defeated state Rep. Michael Wray of Northampton County by the narrowest margin of any legislative primary in the state. Now, Wray is looking for a rematch. But to have a different outcome, he'll have to overcome some new barriers.\n\nStein has endorsed Pierce, and the state Democratic Party is withholding access to VoteBuilder for Wray's campaign.\n\nWray was one of a small handful of Democrats unafraid to buck his party and override Cooper's vetoes. Pierce, on the other hand, has been in lockstep with Stein. Whether primary voters reward Wray's independent streak or Pierce's loyalty remains to be seen.\n\nUnlike many legislative candidates, Wray is well-funded, entering 2026 with $116,000 in available cash. Pierce's spending report isn't yet publicly available."
     },
     {
+      "id": "nc-senate-1",
       "rank": 6,
       "title": "Senate District 1 Republican Primary",
       "party": "Republican",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 1
+        }
+      ],
       "location": "Coastal NC",
       "candidates": [
         {
@@ -207,10 +249,17 @@
       "fullText": "This contest for the open coastal seat that Hanig currently holds has attracted four GOP candidates.\n\nFormer Superior Court Judge Jerry Tillett has garnered the most attention in the race. A Dare County resident Tillett previously sanctioned posted a recording in December in which he claims Tillett used the N-word and joked about shooting a Black man. Tillett has denied it and called for a district attorney to investigate. The DA reached out to the State Bureau of Investigation, which found no evidence of a crime and closed the inquiry. The Assembly reported on this dispute in detail. Tillett has since sued his former daughter-in-law, her new husband, a website publisher, and a social media antagonist for defamation.\n\nFarmer Jay Lane has the support of Agriculture Commissioner Steve Troxler and a number of state senators, including Rules Chairman Bill Rabon, according to his campaign website.\n\nU.S. Marine Corps veteran Cole Johnson and Gates County Commissioner David Forsythe are also running, but they haven't submitted the paperwork needed to raise money, according to the State Board of Elections."
     },
     {
+      "id": "nc-house-60",
       "rank": 7,
       "title": "House District 60 Democratic Primary",
       "party": "Democratic",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 60
+        }
+      ],
       "location": "Guilford County (High Point)",
       "candidates": [
         {
@@ -244,10 +293,17 @@
       "fullText": "Four Democrats are vying for the seat previously held by Cecil Brockman, who resigned last year after being arrested and charged with a number of sexual offenses against minors.\n\nLocal Democrats tapped High Point City Councilwoman Amanda Cook to replace Brockman, but she must win a competitive primary if she wants to continue serving.\n\nAlso in the race: Angie Williams-McMichael, a former charter school teacher; Joe Alston, a former chair for the Guilford County Democratic Party; and Bruce Davis, a former Guilford County commissioner."
     },
     {
+      "id": "nc-house-79",
       "rank": 8,
       "title": "House District 79 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 79
+        }
+      ],
       "location": "Beaufort County",
       "candidates": [
         {
@@ -272,10 +328,17 @@
       "fullText": "There's perhaps no lawmaker who frustrates the Republican establishment more than Rep. Keith Kidwell of Beaufort County.\n\nKidwell, who most famously pressed his colleagues to kill a shrimp trawling bill last year, leads the House Freedom Caucus. Farmer and business owner Darren Armstrong is challenging him this year, and has the support of Troxler and state Rep. Jimmy Dixon, the chairman of the House Agriculture Committee.\n\nIn December, Kidwell shared a text exchange with WUNC in which Dixon told him he had recruited Armstrong. Kidwell said he believed the dispute stemmed from his opposition to a farm bill provision protecting pesticide companies from lawsuits."
     },
     {
+      "id": "nc-senate-34",
       "rank": 9,
       "title": "Senate District 34 Republican Primary",
       "party": "Republican",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 34
+        }
+      ],
       "location": "Cabarrus County",
       "candidates": [
         {
@@ -299,10 +362,17 @@
       "fullText": "When state Senate Majority Leader Paul Newton left office last year to become the chief attorney at UNC-Chapel Hill, Cabarrus County Commissioner Chris Measmer filled the vacant seat.\n\nNow, Measmer faces a formidable challenge from former state Rep. Kevin Crutchfield, who lost a reelection bid in 2024.\n\nBoth candidates are operating on thin budgets.\n\nCrutchfield loaned his campaign $25,000 at the end of last year and reported a $5,000 check from the North Carolina Republican Party that had been \"lost and never cashed.\" Beyond that, he raised almost no money, though he filed for office in early December and only had a few weeks to attract support before the reporting deadline. Measmer raised nearly $38,000, but much of that came from fellow state lawmakers.\n\nWith Measmer running for the first time and Crutchfield currently out of office, it's tough to get a read on this race, making it interesting to watch."
     },
     {
+      "id": "nc-house-113",
       "rank": 10,
       "title": "House District 113 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 113
+        }
+      ],
       "location": "Polk County (Western NC)",
       "candidates": [
         {
@@ -327,10 +397,17 @@
       "fullText": "Since joining the House in 2019, Rep. Jake Johnson of Polk County has steadily risen through party ranks to deputy majority whip, working to keep the caucus together on key votes.\n\nWhen Hurricane Helene struck his district, he was quick to call for additional relief. But Western North Carolina continues to grapple with a slow recovery, which Republicans and Democrats alike have pinned on the federal bureaucracy.\n\nWhile state lawmakers have passed multiple rounds of relief funding, homeowners and small businesses continue to struggle. This race could tell us how much voters blame Republican leaders.\n\nJohnson faces a challenge from former House Majority Leader Mike Hager, who abruptly resigned in 2016. A former engineer for Duke Energy, Hager occasionally clashed with top Republicans in the chamber and launched an unsuccessful bid for House speaker in 2014.\n\nThe primary shows signs of becoming one of the most expensive in the state. Hager entered 2026 with nearly $158,000 in available cash to Johnson's $119,000."
     },
     {
+      "id": "nc-house-99",
       "rank": 11,
       "title": "House District 99 Democratic Primary",
       "party": "Democratic",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 99
+        }
+      ],
       "location": "Mecklenburg County",
       "candidates": [
         {
@@ -360,10 +437,17 @@
       "fullText": "State Rep. Nasif Majeed caught many in his party by surprise when he voted to override Gov. Josh Stein's veto of legislation prohibiting state funds from being used for certain gender-affirming care and allowing parents to bar their children from accessing specific library books.\n\nMajeed wasn't present during the initial vote but wound up giving Republicans the deciding vote that allowed the measure to become law.\n\nBecause of that vote, the state Democratic Party is preventing his campaign from accessing its VoteBuilder voter-turnout tool. Majeed faces two primary challengers: Tucker Neal, a UNC Charlotte student, and Veleria Levy, the president and CEO of HerHealth Consulting.\n\nOn paper, Majeed should win. Stein hasn't endorsed, and Majeed has the luxury of facing two opponents who have never run for public office before and are competing for the same voters.\n\nBut one lesson we learned from the 2024 upset East Carolina University student Wyatt Gable pulled off against longtime Rep. George Cleveland is not to take any race for granted."
     },
     {
+      "id": "nc-house-90",
       "rank": 12,
       "title": "House District 90 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 90
+        }
+      ],
       "location": "Surry & Wilkes Counties",
       "candidates": [
         {
@@ -392,10 +476,19 @@
       "fullText": "With Rep. Sarah Stevens of Surry County running for state Supreme Court, whoever wins this race will have big shoes to fill. Stevens has ascended the political ranks and shaped legislation on voting, healthcare, and a number of other matters.\n\nThree Republicans are running to fill her safe GOP seat: A.J. Daoud, who unsuccessfully ran in the primary for state treasurer in 2024; Dan Kiger, a veteran State Highway Patrol trooper; and Paul Barker, a former chief deputy with the Surry County Sheriff's Office.\n\nDaoud narrowly carried Surry in the treasurer's primary and handily lost in Wilkes. This district is roughly 80% Surry voters and 20% Wilkes. While that may sound good for Daoud, Kiger and Barker both have longstanding ties to the district."
     },
     {
+      "id": "judicial-coa-3",
       "rank": 13,
       "title": "Court of Appeals Judge Seat 3 Democratic Primary",
       "party": "Democratic",
       "type": "Judicial",
+      "districts": [
+        {
+          "chamber": "judicial",
+          "number": null,
+          "court": "coa",
+          "seat": 3
+        }
+      ],
       "location": "Statewide",
       "candidates": [
         {
@@ -419,10 +512,19 @@
       "fullText": "Democrats James Whalen and Christine Walczyk are vying for the seat currently held by Democratic Court of Appeals Judge Allegra Collins, who announced last year she isn't seeking reelection.\n\nWalczyk has served as district court trial judge in Wake County for 18 years. Before that, she practiced law in Raleigh. Whalen is an appellate attorney in private practice at Brooks Pierce, the law firm that helped defend Justice Allison Riggs' 2024 state Supreme Court victory.\n\nThe candidates have a bunch of competing endorsements, making this one of the more interesting judicial primaries.\n\nWhalen has the backing of former U.S. Reps. Eva Clayton and G.K. Butterfield and former state Supreme Court Justices Bob Orr, Burley Mitchell, Henry Frye, and Patricia Timmons-Goodson. Walczyk has the support of former Supreme Court Justices Cheri Beasley and Robin Hudson and nine former Court of Appeals judges, as well as the North Carolina Association of Educators."
     },
     {
+      "id": "judicial-coa-1",
       "rank": 14,
       "title": "Court of Appeals Judge Seat 1 Republican Primary",
       "party": "Republican",
       "type": "Judicial",
+      "districts": [
+        {
+          "chamber": "judicial",
+          "number": null,
+          "court": "coa",
+          "seat": 1
+        }
+      ],
       "location": "Statewide",
       "candidates": [
         {
@@ -446,10 +548,17 @@
       "fullText": "Republicans also have a contested Court of Appeals primary in their quest to unseat Democratic incumbent John Arrowood.\n\nSuperior Court Judge Matt Smith and Administrative Law Judge Michael Byrne have tangled most recently over who is more conservative.\n\nSmith is a Union County native who earned his law degree from Campbell University and was a trial attorney. He won a district court seat in 2020 and superior court contest in 2022.\n\nByrne grew up in Wake County and also got his law degree from Campbell. He has been an administrative law judge since 2020.\n\nByrne donated $500 to Arrowood in 2018, according to campaign finance records, in the first general election cycle after Court of Appeals races became partisan. Byrne said in an interview that he was unaware at the time that Arrowood was a Democrat.\n\nSmith said that contribution and others, including to former Gov. Roy Cooper, raise questions about Byrne's loyalty to the GOP. Byrne points to endorsements from the National Association of Police Organizations, North Carolina Fraternal Order of Police, and North Carolina Police Benevolent Association as a sign he's more than qualified."
     },
     {
+      "id": "nc-house-110",
       "rank": 15,
       "title": "House District 110 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 110
+        }
+      ],
       "location": "Gaston County",
       "candidates": [
         {
@@ -473,10 +582,17 @@
       "fullText": "Republican state Rep. Kelly Hastings of Gaston County hasn't faced a serious primary threat since he was first elected in 2010, so this race isn't getting much attention. It might be a dud, or it could be the biggest primary flying under the radar.\n\nHastings initially didn't appear thrilled with the idea of returning to Raleigh. He announced last May that he wouldn't seek reelection, but then changed his mind a month later. Pharmacist Caroline Eason, who just received her doctorate of pharmacy degree from UNC-Chapel Hill, jumped into the race shortly thereafter.\n\nEason has been active in GOP politics in recent years, occasionally testifying about legislation that impacts her family's business. She's young and hungry, and as we saw with Gable's victory in 2024, those two traits could be a lethal combination for complacent incumbents.\n\nEason's latest campaign finance report suggests she's got some momentum. She outraised Hastings and entered 2026 with more than $20,000 in available cash to Hasting's $17,500."
     },
     {
+      "id": "nc-senate-22",
       "rank": 16,
       "title": "Senate District 22 Democratic Primary",
       "party": "Democratic",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 22
+        }
+      ],
       "location": "Durham County",
       "candidates": [
         {
@@ -500,10 +616,17 @@
       "fullText": "There aren't many competitive Democratic legislative primaries this year, but this Durham seat held by state Sen. Sophia Chitlik could be one.\n\nChitlik, a freshman lawmaker, faces a challenge from DeDreana Freeman, who narrowly lost her reelection bid to the Durham City Council last year. Coming off a recent electoral defeat may not be an encouraging sign, but Freeman has a campaign infrastructure in place that could propel her to an upset."
     },
     {
+      "id": "nc-house-118",
       "rank": 17,
       "title": "House District 118 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 118
+        }
+      ],
       "location": "Haywood County (Western NC)",
       "candidates": [
         {
@@ -528,10 +651,17 @@
       "fullText": "State Rep. Mark Pless of Haywood County was one of the last-minute holdouts on a controversial bill in 2024 that provided some Hurricane Helene relief but largely focused on taking power away from Stein.\n\nPless felt it didn't deliver enough meaningful support to his constituents, but he fell in line with his party on the veto override vote. Pless later became chair of an emergency management and disaster recovery committee.\n\nBut Western North Carolina residents and business owners are still reeling. Jimmy Rogers, a longtime school board member, is now challenging him in the primary.\n\n(We chose this race instead of a similar dynamic in District 119 because Rep. Mike Clampitt faces two primary challengers there who could fracture the vote against him.)"
     },
     {
+      "id": "nc-house-65",
       "rank": 18,
       "title": "House District 65 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 65
+        }
+      ],
       "location": "Rockingham County",
       "candidates": [
         {
@@ -560,10 +690,17 @@
       "fullText": "Rep. Reece Pyrtle of Rockingham County faces two primary opponents: one, Joseph Gibson, who was embraced by neo-Nazis in a previous election and lost by nearly 61 percentage points last year—and another with a more serious chance of winning.\n\nSeth Woodall, an Eden attorney, is the latter. He finished fourth in a crowded lieutenant governor primary last year and can self-finance; he put $1 million into his 2024 bid but has not given to his legislative campaign so far.\n\nWhile Woodall faces an uphill battle against an incumbent, heavy spending on his part paired with anti-establishment sentiment in the county could be enough to pull off the upset."
     },
     {
+      "id": "nc-house-37",
       "rank": 19,
       "title": "House District 37 Democratic Primary",
       "party": "Democratic",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 37
+        }
+      ],
       "location": "Wake County",
       "candidates": [
         {
@@ -592,10 +729,17 @@
       "fullText": "The Wake County seat held by Republican state Rep. Erin Paré is one of a small handful of viable pickup opportunities for Democrats this fall. Paré carried the district by 6 points in the 2024 election.\n\nThree Democrats are vying for the chance to take her on: Winn Decker, an educational policy consultant; Marcus Gadson, a UNC-Chapel Hill law professor; and Ralph Clements, a health care consultant.\n\nWhile it would be an uphill battle for any of the Democrats to unseat Paré, given her past electoral success, she could lose if there's a blue wave. For that reason, this is one of the few primaries in Wake County worth watching."
     },
     {
+      "id": "nc-house-95",
       "rank": 20,
       "title": "House District 95 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 95
+        }
+      ],
       "location": "Iredell County",
       "candidates": [
         {
@@ -619,10 +763,17 @@
       "fullText": "Republican state Rep. Todd Carver of Iredell County is looking to fend off a challenge from school board member Mike Kubiniec.\n\nCarver is the favorite, but Kubiniec is no stranger to contentious political battles, including a recent scuffle and profanity-laced altercation with the chair of the Iredell-Statesville School Board.\n\nKubiniec was involved in a texting scandal in 2023 in which community members accused him and other board members of violating the state's open meetings law and mocking students behind closed doors, according to records obtained by the Iredell Free News.\n\nKubiniec finished 2025 with less than $7,000 on hand to Carver's almost $11,000."
     },
     {
+      "id": "nc-house-78",
       "rank": 21,
       "title": "House District 78 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 78
+        }
+      ],
       "location": "Moore County",
       "candidates": [
         {
@@ -646,10 +797,17 @@
       "fullText": "Retired Wildlife Resources Commission officer Mark Dutton is seeking to unseat state Rep. Neal Jackson of Moore County.\n\nDutton raised nearly $24,000 and had almost $16,000 in his campaign coffers. Meanwhile, Jackson brought in a whopping $158,000 and had more than $201,000 in the bank coming into this year—a fundraising haul that, in a safe seat, suggests Jackson is gearing up for a more competitive primary than expected."
     },
     {
+      "id": "nc-house-55",
       "rank": 22,
       "title": "House District 55 Republican Primary",
       "party": "Republican",
       "type": "State House",
+      "districts": [
+        {
+          "chamber": "nc-house",
+          "number": 55
+        }
+      ],
       "location": "Anson & Union Counties",
       "candidates": [
         {
@@ -678,10 +836,21 @@
       "fullText": "Three Republicans are looking to take the open seat that Mark Brody is leaving behind: businessman Clancy Baucom, real estate broker John Powell, and businessman Richard Miller.\n\nIt's a fairly safe GOP seat in Anson County and parts of Union County, so whoever comes out on top could come to Raleigh for the long haul."
     },
     {
+      "id": "nc-senate-9-nc-house-4",
       "rank": 23,
       "title": "Senate District 9 / House District 4 Republican Primaries",
       "party": "Republican",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 9
+        },
+        {
+          "chamber": "nc-house",
+          "number": 4
+        }
+      ],
       "location": "Eastern NC",
       "candidates": [
         {
@@ -716,10 +885,17 @@
       "fullText": "A husband-and-wife duo are running to oust two of the longest-serving Republicans in the legislature. Will it be close? No idea. But it's definitely interesting.\n\nWilliam Barbour is challenging longtime Sen. Brent Jackson in eastern North Carolina. For anyone doing a double take with that name, he's not Rev. William Barber II, the civil rights leader who's been a constant thorn in the side of GOP lawmakers. This Barbour is an actor who starred as a teacher on the Netflix show 13 Reasons Why.\n\nIf that weren't compelling enough, his wife, Marcella, is looking to unseat Dixon, the 80-year-old chairman of the House agriculture committee.\n\nNeither Barbour has reported receiving a single donation, which probably doesn't bode well for their political aspirations. But primary elections are notoriously unpredictable. Might one of them pull off the upset of the year? You heard about it here first."
     },
     {
+      "id": "nc-senate-21",
       "rank": 24,
       "title": "Senate District 21 Republican Primary",
       "party": "Republican",
       "type": "State Senate",
+      "districts": [
+        {
+          "chamber": "nc-senate",
+          "number": 21
+        }
+      ],
       "location": "Cumberland County",
       "candidates": [
         {
@@ -744,10 +920,17 @@
       "fullText": "Republican state Sen. Tom McInnis of Cumberland County faces a challenge from Ray Daly. The two have tangled over Medicaid, with McInnis' attorney sending Daly a letter to take down political messages that the incumbent argues are defamatory.\n\nMcInnis is the favorite to win, as Daly only received $550 from outside donors last year."
     },
     {
+      "id": "us-house-11",
       "rank": 25,
       "title": "11th Congressional District Democratic Primary",
       "party": "Democratic",
       "type": "U.S. House",
+      "districts": [
+        {
+          "chamber": "us-house",
+          "number": 11
+        }
+      ],
       "location": "Western NC (Asheville area)",
       "candidates": [
         {
@@ -787,10 +970,17 @@
       "fullText": "Whoever wins the Democratic primary for the state's westernmost district will have their work cut out for them in ousting Republican U.S. Rep. Chuck Edwards. But with national Democrats expanding their battleground priorities to include this seat, nothing is off limits.\n\nJamie Ager, a farmer and businessman whose father and brother have both served in the General Assembly, is favored to win the primary. But four other Democrats are vying for the seat: Paul Maddox, a cancer researcher; Dr. Richard Hudspeth, the former CEO of UNC Blue Ridge Health; Zelda Briarwood, a party activist; and Lee Whipple, a civil engineer.\n\nAger entered 2026 with four times more cash in the bank than all his opponents combined, according to campaign finance filings."
     },
     {
+      "id": "us-senate",
       "rank": 26,
       "title": "U.S. Senate Republican Primary",
       "party": "Republican",
       "type": "U.S. Senate",
+      "districts": [
+        {
+          "chamber": "us-senate",
+          "number": null
+        }
+      ],
       "location": "Statewide",
       "candidates": [
         {

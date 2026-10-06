@@ -1,73 +1,111 @@
 #!/usr/bin/env python3
-"""Fetch NCSBE election results and write results.json for the matchup guide."""
+"""Fetch NCSBE election results and write results.json for the general-election guide.
 
+Usage:
+    python3 update_results.py                      # Nov 3, 2026 general (default)
+    python3 update_results.py --url URL            # any NCSBE results_0.txt (e.g. 2024 general)
+    python3 update_results.py --output FILE        # write somewhere other than results.json
+
+The URL can also be set with the NCSBE_RESULTS_URL environment variable.
+
+Contests are mapped from each race's `districts` array (see README). General-election
+contest names have no party suffix, e.g. "US HOUSE OF REPRESENTATIVES DISTRICT 01 (VOTE FOR 1)".
+If a race still has a top-level `party` (primary-style data), the primary suffix
+" - REP" / " - DEM" is added, matching NCSBE's primary contest names.
+"""
+
+import argparse
 import json
+import os
 import re
 import urllib.request
 from datetime import datetime
 
-RESULTS_URL = "https://er.ncsbe.gov/enr/20260303/data/results_0.txt"
+RESULTS_URL = "https://er.ncsbe.gov/enr/20261103/data/results_0.txt"
 RACES_FILE = "races.json"
 OUTPUT_FILE = "results.json"
 
+PARTY_CODES = {"Republican": "REP", "Democratic": "DEM"}
+PARTY_NAMES = {
+    "REP": "Republican",
+    "DEM": "Democratic",
+    "LIB": "Libertarian",
+    "GRE": "Green",
+    "CST": "Constitution",
+    "JFA": "Justice for All",
+    "WTP": "We the People",
+    "UNA": "Unaffiliated",
+}
+SUB_LABELS = {"nc-senate": "Senate District", "nc-house": "House District",
+              "us-house": "Congressional District"}
 
-def build_ncsbe_contest_name(title: str, party: str) -> str | list[str]:
-    """Convert a races.json title to the NCSBE contest name format."""
-    party_code = "REP" if party == "Republican" else "DEM"
 
-    # US Senate
+def contest_base(district: dict) -> str | None:
+    """NCSBE contest name (without party suffix / vote-for) for one districts[] entry."""
+    chamber, number = district.get("chamber"), district.get("number")
+    if chamber == "us-senate":
+        return "US SENATE"
+    if chamber == "us-house" and number:
+        return f"US HOUSE OF REPRESENTATIVES DISTRICT {number:02d}"
+    if chamber == "nc-senate" and number:
+        return f"NC STATE SENATE DISTRICT {number:02d}"
+    if chamber == "nc-house" and number:
+        return f"NC HOUSE OF REPRESENTATIVES DISTRICT {number:03d}"
+    if chamber == "judicial" and district.get("seat"):
+        seat = district["seat"]
+        court = district.get("court", "coa")
+        if court == "coa":
+            return f"NC COURT OF APPEALS JUDGE SEAT {seat:02d}"
+        if court == "supreme":
+            return f"NC SUPREME COURT ASSOCIATE JUSTICE SEAT {seat:02d}"
+    return None
+
+
+def districts_from_title(title: str) -> list[dict]:
+    """Fallback for races without a `districts` field: derive them from the title."""
     if "U.S. Senate" in title:
-        return f"US SENATE - {party_code} (VOTE FOR 1)"
-
-    # Congressional district
+        return [{"chamber": "us-senate", "number": None}]
     m = re.search(r"(\d+)\w* Congressional District", title)
     if m:
-        dist = m.group(1).zfill(2)
-        return f"US HOUSE OF REPRESENTATIVES DISTRICT {dist} - {party_code} (VOTE FOR 1)"
-
-    # Combined race: "Senate District 9 / House District 4"
-    if "/" in title:
-        parts = title.split("/")
-        names = []
-        for part in parts:
-            part = part.strip()
-            sm = re.search(r"Senate District (\d+)", part)
-            if sm:
-                dist = sm.group(1).zfill(2)
-                names.append(f"NC STATE SENATE DISTRICT {dist} - {party_code} (VOTE FOR 1)")
-            hm = re.search(r"House District (\d+)", part)
-            if hm:
-                dist = hm.group(1).zfill(3)
-                names.append(f"NC HOUSE OF REPRESENTATIVES DISTRICT {dist} - {party_code} (VOTE FOR 1)")
-        return names
-
-    # State Senate
-    m = re.search(r"Senate District (\d+)", title)
-    if m:
-        dist = m.group(1).zfill(2)
-        return f"NC STATE SENATE DISTRICT {dist} - {party_code} (VOTE FOR 1)"
-
-    # State House
-    m = re.search(r"House District (\d+)", title)
-    if m:
-        dist = m.group(1).zfill(3)
-        return f"NC HOUSE OF REPRESENTATIVES DISTRICT {dist} - {party_code} (VOTE FOR 1)"
-
-    # Court of Appeals
+        return [{"chamber": "us-house", "number": int(m.group(1))}]
     m = re.search(r"Court of Appeals Judge Seat (\d+)", title)
     if m:
-        dist = m.group(1).zfill(2)
-        return f"NC COURT OF APPEALS JUDGE SEAT {dist} - {party_code} (VOTE FOR 1)"
+        return [{"chamber": "judicial", "number": None, "court": "coa", "seat": int(m.group(1))}]
+    return [
+        {"chamber": "nc-senate" if kind == "Senate" else "nc-house", "number": int(num)}
+        for kind, num in re.findall(r"(Senate|House) District (\d+)", title)
+    ]
 
-    return None
+
+def build_ncsbe_contests(race: dict) -> list[tuple[str, str]]:
+    """Return [(ncsbe_contest_name, results_key)] for a race.
+
+    results_key is the race title, or for multi-district races a per-district sub-key
+    ("Senate District 9" in a general, "Senate District 9 Republican Primary" in a
+    primary) that app.js's getResultsHTML matches against the title parts.
+    """
+    party = race.get("party")
+    suffix = f" - {PARTY_CODES[party]}" if party in PARTY_CODES else ""
+    districts = race.get("districts") or districts_from_title(race["title"])
+
+    contests = []
+    for d in districts:
+        base = contest_base(d)
+        if base is None:
+            continue
+        key = race["title"]
+        if len(districts) > 1:
+            key = f"{SUB_LABELS.get(d['chamber'], d['chamber'])} {d['number']}"
+            if suffix:
+                key += f" {party} Primary"
+        contests.append((f"{base}{suffix} (VOTE FOR 1)", key))
+    return contests
 
 
 def extract_last_name(name: str) -> str:
     """Extract last name from a full name, handling suffixes."""
-    # Remove common prefixes
     name = re.sub(r"^(Rev\.|Dr\.|Mr\.|Mrs\.|Ms\.)\s+", "", name)
     parts = name.split()
-    # Handle suffixes like Jr., Sr., III, IV
     suffixes = {"jr.", "sr.", "ii", "iii", "iv", "v"}
     if len(parts) > 1 and parts[-1].lower().rstrip(".") in suffixes:
         return parts[-2].upper()
@@ -86,7 +124,6 @@ def match_candidate(ncsbe_name: str, race_candidates: list[dict]) -> dict | None
     last_matches = [c for c in race_candidates if extract_last_name(c["name"]) == ncsbe_last]
     if len(last_matches) == 1:
         return last_matches[0]
-    # Multiple candidates share a last name — match on first name too
     if len(last_matches) > 1:
         for c in last_matches:
             if c["name"].split()[0].upper() == ncsbe_first:
@@ -94,34 +131,42 @@ def match_candidate(ncsbe_name: str, race_candidates: list[dict]) -> dict | None
     return None
 
 
-def fetch_results():
-    """Fetch and parse NCSBE results."""
-    req = urllib.request.Request(RESULTS_URL, headers={"User-Agent": "Mozilla/5.0"})
+def fallback_name(ncsbe_name: str) -> str:
+    """Keep NCSBE's mixed-case ballot name; title-case it only if it's ALL CAPS (as app.js does)."""
+    if ncsbe_name != ncsbe_name.upper():
+        return ncsbe_name.strip()
+    return " ".join(w[:1].upper() + w[1:].lower() for w in ncsbe_name.split())
+
+
+def fetch_results(url: str):
+    """Fetch and parse NCSBE results (a JSON array despite the .txt extension)."""
+    req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
     resp = urllib.request.urlopen(req, timeout=30)
     return json.loads(resp.read())
 
 
 def main():
-    # Load races
-    with open(RACES_FILE) as f:
+    parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    parser.add_argument("--url", default=os.environ.get("NCSBE_RESULTS_URL", RESULTS_URL),
+                        help="NCSBE results_0.txt URL (default: %(default)s)")
+    parser.add_argument("--races", default=RACES_FILE)
+    parser.add_argument("--output", default=OUTPUT_FILE)
+    args = parser.parse_args()
+
+    with open(args.races, encoding="utf-8") as f:
         races_data = json.load(f)
 
-    # Fetch NCSBE results
-    print("Fetching NCSBE results...")
-    ncsbe_results = fetch_results()
+    print(f"Fetching NCSBE results from {args.url} ...")
+    ncsbe_results = fetch_results(args.url)
     print(f"Got {len(ncsbe_results)} result rows")
 
-    # Index NCSBE results by contest name
     by_contest: dict[str, list[dict]] = {}
     for row in ncsbe_results:
-        cnm = row["cnm"]
-        by_contest.setdefault(cnm, []).append(row)
+        by_contest.setdefault(row["cnm"], []).append(row)
 
-    # Get global precincts reporting from first result
     global_prt = ncsbe_results[0]["prt"] if ncsbe_results else "0"
     global_ptl = ncsbe_results[0]["ptl"] if ncsbe_results else "0"
 
-    # Build output
     output = {
         "lastUpdated": datetime.now().strftime("%Y-%m-%dT%H:%M:%S"),
         "precinctsReporting": f"{global_prt} of {global_ptl}",
@@ -130,56 +175,41 @@ def main():
 
     matched = 0
     for race in races_data["races"]:
-        contest_names = build_ncsbe_contest_name(race["title"], race["party"])
-        if contest_names is None:
+        contests = build_ncsbe_contests(race)
+        if not contests:
             print(f"  SKIP: Could not map '{race['title']}'")
             continue
 
-        if isinstance(contest_names, str):
-            contest_names = [contest_names]
-
-        for contest_name in contest_names:
+        for contest_name, race_key in contests:
             if contest_name not in by_contest:
                 print(f"  MISS: '{contest_name}' not found in NCSBE data")
                 continue
 
-            rows = by_contest[contest_name]
-            # Sort by vote count descending
-            rows.sort(key=lambda r: int(r["vct"]), reverse=True)
-
+            rows = sorted(by_contest[contest_name], key=lambda r: int(r["vct"]), reverse=True)
             candidates = []
             for row in rows:
                 matched_cand = match_candidate(row["bnm"], race["candidates"])
-                display_name = matched_cand["name"] if matched_cand else row["bnm"].title()
-                candidates.append({
-                    "name": display_name,
+                cand = {
+                    "name": matched_cand["name"] if matched_cand else fallback_name(row["bnm"]),
                     "votes": int(row["vct"]),
                     "percentage": float(row["pct"]),
-                })
-
-            race_key = race["title"]
-            # For combined races, append sub-race info
-            if len(contest_names) > 1:
-                # Extract which sub-race this is
-                if "STATE SENATE" in contest_name:
-                    m = re.search(r"DISTRICT (\d+)", contest_name)
-                    race_key = f"Senate District {int(m.group(1))} Republican Primary"
-                elif "HOUSE OF REPRESENTATIVES" in contest_name:
-                    m = re.search(r"DISTRICT (\d+)", contest_name)
-                    race_key = f"House District {int(m.group(1))} Republican Primary"
+                }
+                pty = (row.get("pty") or "").strip()
+                if pty:
+                    cand["party"] = PARTY_NAMES.get(pty, pty)
+                candidates.append(cand)
 
             output["races"][race_key] = {
                 "precinctsReporting": f"{rows[0]['prt']} of {rows[0]['ptl']}",
                 "candidates": candidates,
             }
             matched += 1
-            print(f"  OK: {race_key} ({len(candidates)} candidates)")
+            print(f"  OK: {race_key} <- {contest_name} ({len(candidates)} candidates)")
 
-    # Write output
-    with open(OUTPUT_FILE, "w") as f:
-        json.dump(output, f, indent=2)
+    with open(args.output, "w", encoding="utf-8") as f:
+        json.dump(output, f, indent=2, ensure_ascii=False)
 
-    print(f"\nWrote {OUTPUT_FILE} with {matched} races (of {len(races_data['races'])} total)")
+    print(f"\nWrote {args.output} with {matched} contests (from {len(races_data['races'])} races)")
 
 
 if __name__ == "__main__":

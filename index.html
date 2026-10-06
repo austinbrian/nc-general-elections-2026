@@ -3,14 +3,35 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Top Primaries to Watch in 2026 | The Assembly</title>
+  <meta name="robots" content="noindex, nofollow">
+  <title>General Elections to Watch in 2026 | The Assembly</title>
   <link rel="stylesheet" href="styles.css">
-  <meta name="description" content="An interactive guide to the 26 most important North Carolina primary elections in 2026, from The Assembly.">
-  <meta property="og:title" content="26 NC Primary Races to Watch">
-  <meta property="og:description" content="An interactive guide to the 26 most important North Carolina primary elections in 2026.">
+  <meta name="description" content="An interactive guide to the most important North Carolina general elections on Nov. 3, 2026, from The Assembly.">
+  <meta property="og:title" content="NC General Elections to Watch in 2026">
+  <meta property="og:description" content="An interactive guide to the most important North Carolina general elections on Nov. 3, 2026.">
   <meta property="og:type" content="website">
+  <script src="auth.js"></script>
 </head>
 <body>
+  <div class="auth-gate" id="authGate">
+    <form class="auth-card" id="authForm" autocomplete="on">
+      <img
+        src="https://i0.wp.com/www.theassemblync.com/wp-content/uploads/2025/03/cropped-TA_Mark_Black_Square.png"
+        alt="The Assembly"
+        class="logo"
+      >
+      <span class="category-link">Elections</span>
+      <h1 class="auth-title">General Elections to Watch in 2026</h1>
+      <p class="auth-note">Preview for The Assembly. Please sign in.</p>
+      <label class="auth-label" for="authUser">Username</label>
+      <input class="auth-input" id="authUser" name="username" type="text" autocomplete="username" autocapitalize="none" spellcheck="false" required>
+      <label class="auth-label" for="authPass">Password</label>
+      <input class="auth-input" id="authPass" name="password" type="password" autocomplete="current-password" required>
+      <p class="auth-error" id="authError" role="alert" aria-live="polite"></p>
+      <button class="auth-submit" type="submit">Sign in</button>
+    </form>
+  </div>
+
   <div class="container">
     <header class="header">
       <div class="header-content">
@@ -22,7 +43,7 @@
           >
         </a>
         <a href="https://www.theassemblync.com/news/politics/elections/north-carolina-2026-top-primary-elections/" class="category-link" target="_blank" rel="noopener">ELECTIONS</a>
-        <h2 class="subtitle" id="pageSubtitle">Top Primaries to Watch in 2026</h2>
+        <h2 class="subtitle" id="pageSubtitle">General Elections to Watch in 2026</h2>
         <p class="byline">
           By <span class="byline-author">
             <a href="mailto:bryan@theassemblync.com">Bryan Anderson</a>
@@ -48,6 +69,34 @@
       </div>
     </header>
 
+    <section class="map-section" id="mapSection" aria-label="District map">
+      <div class="map-header">
+        <span class="control-label">Map:</span>
+        <div class="map-toggle" role="group" aria-label="Map layer">
+          <button class="map-toggle-btn active" data-layer="federal" aria-pressed="true">Federal</button>
+          <button class="map-toggle-btn" data-layer="nc-house" aria-pressed="false">NC House</button>
+          <button class="map-toggle-btn" data-layer="nc-senate" aria-pressed="false">NC Senate</button>
+        </div>
+      </div>
+      <div class="map-frame" id="mapFrame">
+        <svg class="map-svg" id="mapSvg" role="group" aria-label="North Carolina districts"></svg>
+        <div class="map-zoom" aria-label="Zoom">
+          <button class="map-zoom-btn" data-zoom="in" aria-label="Zoom in">+</button>
+          <button class="map-zoom-btn" data-zoom="out" aria-label="Zoom out">&minus;</button>
+          <button class="map-zoom-btn" data-zoom="reset" aria-label="Reset zoom">&#8634;</button>
+        </div>
+        <div class="map-tooltip" id="mapTooltip" role="tooltip" hidden></div>
+        <div class="map-status" id="mapStatus" aria-live="polite"></div>
+      </div>
+      <div class="map-footer">
+        <div class="map-legend">
+          <span class="legend-item"><span class="legend-swatch featured"></span>Featured race</span>
+          <span class="legend-item"><span class="legend-swatch"></span>Other districts</span>
+        </div>
+        <div class="map-chips" id="mapChips"></div>
+      </div>
+    </section>
+
     <nav class="controls">
       <div class="view-modes">
         <span class="control-label">View:</span>
@@ -60,8 +109,6 @@
       <div class="type-filters">
         <span class="control-label">Filter:</span>
         <button class="filter-btn active" data-type="ALL">All</button>
-        <button class="filter-btn" data-type="Republican">GOP</button>
-        <button class="filter-btn" data-type="Democratic">Dem</button>
         <button class="filter-btn" data-type="U.S. House">US House</button>
         <button class="filter-btn" data-type="U.S. Senate">US Senate</button>
         <button class="filter-btn" data-type="State Senate">NC Senate</button>
@@ -76,9 +123,13 @@
 
     <footer class="footer">
       <p>Data sourced from <a href="https://www.theassemblync.com/" target="_blank" rel="noopener">The Assembly</a></p>
+      <p class="footer-logout"><a href="#" onclick="logout(); return false;">Log out</a></p>
     </footer>
   </div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+  <script src="map.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
